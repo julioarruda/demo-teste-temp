@@ -22,5 +22,6 @@ resource "azurerm_app_service" "example" {
 
   site_config {
     dotnet_framework_version = var.dotnet_framework_version
+    linux_fx_version         = "DOTNETCORE|6.0"
   }
 }

@@ -27,6 +27,13 @@ jobs:
         - name: Publish
           run: dotnet publish --no-restore --output ./publish
 
+# faça um upload da pasta ./publish
+        - name: Upload Artifact
+          uses: actions/upload-artifact@v2
+          with:
+            name: app
+            path: ./publish
+
 # inclua um upload para a pasta ./terraform
         - name: Upload Terraform
           uses: actions/upload-artifact@v2
@@ -88,5 +95,19 @@ jobs:
           run: terraform apply plan.tfplan
           working-directory: ./terraform
 
+
+# baixe o artefato app
+        - name: Download Artifact
+          uses: actions/download-artifact@v2
+          with:
+            name: app
+            path: ./app
+
+# faça o deploy da pasta ./app no azure app service
+        - name: Azure WebApp Deploy
+          uses: azure/webapps-deploy@v2
+          with:
+            app-name: example-${{ vars.APP_NAME }}
+            package: ./app
 
 
