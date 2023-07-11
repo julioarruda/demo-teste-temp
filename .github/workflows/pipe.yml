@@ -26,6 +26,59 @@ jobs:
         
         - name: Publish
           run: dotnet publish --no-restore --output ./publish
-        
+
+# inclua um upload para a pasta ./terraform
+        - name: Upload Terraform
+          uses: actions/upload-artifact@v2
+          with:
+            name: terraform
+            path: ./terraform
+
+
+# crie um Job que faça o Deploy do terraform no Azure
+# precisa baixar o artefato chamado terraform
+
+    deploy:
+        runs-on: ubuntu-latest
+        needs: build
+        steps:
+        - name: Download Terraform
+          uses: actions/download-artifact@v2
+          with:
+            name: terraform
+            path: ./terraform
+
+        - name: Replace variables
+          run: |
+            sed -i 's/__state_rg__/${{ vars.STATE_RG }}/g' ./terraform/provider.tf
+            sed -i 's/__state_stg_account__/${{ vars.STATE_STG_ACCOUNT }}/g' ./terraform/provider.tf
+            sed -i 's/__state_container_name__/${{ vars.STATE_CONTAINER_NAME }}/g' ./terraform/provider.tf
+            sed -i 's/__state_container_name__/${{ vars.STATE_CONTAINER_NAME }}/g' ./terraform/provider.tf
+            sed -i 's/__rg_name__/${{ vars.APP_RG_NAME }}/g' ./terraform/variables.tf
+            sed -i 's/__location__/${{ vars.APP_LOCATION }}/g' ./terraform/variables.tf
+            sed -i 's/__app-service__/${{ vars.APP_NAME }}/g' ./terraform/variables.tf
+            
+
+# inclua o login no Azure
+        - name: Azure Login
+          uses: azure/login@v1
+          with:
+            creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+
+        - name: Setup Terraform
+          uses: hashicorp/setup-terraform@v1
+          with:
+            cli_config_credentials_token: ${{ secrets.AZURE_CREDENTIALS }}
+
+        - name: Terraform Init
+          run: terraform init
+
+        - name: Terraform Plan
+          run: terraform plan -out plan.tfplan
+
+        - name: Terraform Apply
+          run: terraform apply plan.tfplan
+
 
 
