@@ -56,16 +56,14 @@ jobs:
             sed -i 's/__state_stg_account__/${{ vars.STATE_STG_ACCOUNT }}/g' ./terraform/provider.tf
             sed -i 's/__state_container_name__/${{ vars.STATE_CONTAINER_NAME }}/g' ./terraform/provider.tf
             sed -i 's/__state_container_name__/${{ vars.STATE_CONTAINER_NAME }}/g' ./terraform/provider.tf
+            sed -i 's/__state_client_id__/${{ secrets.AZURE_CLIENT_ID }}/g' ./terraform/provider.tf
+            sed -i 's/__state_client_secret__/${{ secrets.AZURE_CLIENT_SECRET }}/g' ./terraform/provider.tf
+            sed -i 's/__state_tenant_id__/${{ secrets.AZURE_TENNANT_ID }}/g' ./terraform/provider.tf
+            sed -i 's/__state_subscription_id__/${{ secrets.AZURE_SUBSCRIPTION_ID }}/g' ./terraform/provider.tf
             sed -i 's/__rg_name__/${{ vars.APP_RG_NAME }}/g' ./terraform/variables.tf
             sed -i 's/__location__/${{ vars.APP_LOCATION }}/g' ./terraform/variables.tf
             sed -i 's/__app-service__/${{ vars.APP_NAME }}/g' ./terraform/variables.tf
 
-
-        - name: Upload Terraform
-          uses: actions/upload-artifact@v2
-          with:
-            name: terraform2
-            path: ./terraform            
          
 
 # inclua o login no Azure
