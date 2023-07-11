@@ -59,6 +59,11 @@ jobs:
             sed -i 's/__rg_name__/${{ vars.APP_RG_NAME }}/g' ./terraform/variables.tf
             sed -i 's/__location__/${{ vars.APP_LOCATION }}/g' ./terraform/variables.tf
             sed -i 's/__app-service__/${{ vars.APP_NAME }}/g' ./terraform/variables.tf
+
+        - name: test
+          run: |
+            cat ./terraform/provider.tf
+            cat ./terraform/variables.tf
             
 
 # inclua o login no Azure
