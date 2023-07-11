@@ -40,6 +40,8 @@ jobs:
 
     deploy:
         runs-on: ubuntu-latest
+        environment:
+          name: dev
         needs: build
         steps:
         - name: Download Terraform
