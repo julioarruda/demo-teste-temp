@@ -57,19 +57,19 @@ jobs:
             name: terraform
             path: ./terraform
 
-        - name: Replace variables
-          run: |
-            sed -i 's/__state_rg__/${{ vars.STATE_RG }}/g' ./terraform/provider.tf
-            sed -i 's/__state_stg_account__/${{ vars.STATE_STG_ACCOUNT }}/g' ./terraform/provider.tf
-            sed -i 's/__state_container_name__/${{ vars.STATE_CONTAINER_NAME }}/g' ./terraform/provider.tf
-            sed -i 's/__state_container_name__/${{ vars.STATE_CONTAINER_NAME }}/g' ./terraform/provider.tf
-            sed -i 's/__state_client_id__/${{ secrets.AZURE_CLIENT_ID }}/g' ./terraform/provider.tf
-            sed -i 's/__state_client_secret__/${{ secrets.AZURE_CLIENT_SECRET }}/g' ./terraform/provider.tf
-            sed -i 's/__state_tenant_id__/${{ secrets.AZURE_TENNANT_ID }}/g' ./terraform/provider.tf
-            sed -i 's/__state_subscription_id__/${{ secrets.AZURE_SUBSCRIPTION_ID }}/g' ./terraform/provider.tf
-            sed -i 's/__rg_name__/${{ vars.APP_RG_NAME }}/g' ./terraform/variables.tf
-            sed -i 's/__location__/${{ vars.APP_LOCATION }}/g' ./terraform/variables.tf
-            sed -i 's/__app-service__/${{ vars.APP_NAME }}/g' ./terraform/variables.tf
+        # - name: Replace variables
+        #   run: |
+        #     sed -i 's/__state_rg__/${{ vars.STATE_RG }}/g' ./terraform/provider.tf
+        #     sed -i 's/__state_stg_account__/${{ vars.STATE_STG_ACCOUNT }}/g' ./terraform/provider.tf
+        #     sed -i 's/__state_container_name__/${{ vars.STATE_CONTAINER_NAME }}/g' ./terraform/provider.tf
+        #     sed -i 's/__state_container_name__/${{ vars.STATE_CONTAINER_NAME }}/g' ./terraform/provider.tf
+        #     sed -i 's/__state_client_id__/${{ secrets.AZURE_CLIENT_ID }}/g' ./terraform/provider.tf
+        #     sed -i 's/__state_client_secret__/${{ secrets.AZURE_CLIENT_SECRET }}/g' ./terraform/provider.tf
+        #     sed -i 's/__state_tenant_id__/${{ secrets.AZURE_TENNANT_ID }}/g' ./terraform/provider.tf
+        #     sed -i 's/__state_subscription_id__/${{ secrets.AZURE_SUBSCRIPTION_ID }}/g' ./terraform/provider.tf
+        #     sed -i 's/__rg_name__/${{ vars.APP_RG_NAME }}/g' ./terraform/variables.tf
+        #     sed -i 's/__location__/${{ vars.APP_LOCATION }}/g' ./terraform/variables.tf
+        #     sed -i 's/__app-service__/${{ vars.APP_NAME }}/g' ./terraform/variables.tf
 
          
 
@@ -80,19 +80,24 @@ jobs:
             creds: ${{ secrets.AZURE_CREDENTIALS }}
 
 
-        - name: Setup Terraform
-          uses: hashicorp/setup-terraform@v2
+        # - name: Setup Terraform
+        #   uses: hashicorp/setup-terraform@v2
 
-        - name: Terraform Init
-          run: terraform init
-          working-directory: ./terraform
+        # - name: Terraform Init
+        #   run: terraform init
+        #   working-directory: ./terraform
 
-        - name: Terraform Plan
-          run: terraform plan -out plan.tfplan
-          working-directory: ./terraform
+        # - name: Terraform Plan
+        #   run: terraform plan -out plan.tfplan
+        #   working-directory: ./terraform
 
-        - name: Terraform Apply
-          run: terraform apply plan.tfplan
+        # - name: Terraform Apply
+        #   run: terraform apply plan.tfplan
+        #   working-directory: ./terraform
+
+# inclua o deploy do script azure bicep que está em ./terraform/deploy.bicep
+        - name: Deploy Bicep
+          run: az deployment group create --resource-group ${{ vars.APP_RG_NAME }} --template-file ./terraform/deploy.bicep --parameters appName=demoapp99${{ vars.APP_NAME }} --parameters location=${{ vars.APP_LOCATION }}
           working-directory: ./terraform
 
 
