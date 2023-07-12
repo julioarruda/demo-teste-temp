@@ -112,7 +112,7 @@ jobs:
         - name: Azure WebApp Deploy
           uses: azure/webapps-deploy@v2
           with:
-            app-name: example-${{ vars.APP_NAME }}
+            app-name: demoapp99${{ vars.APP_NAME }}
             package: ./app
 
 
