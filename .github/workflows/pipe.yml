@@ -97,7 +97,7 @@ jobs:
 
 # inclua o deploy do script azure bicep que está em ./terraform/deploy.bicep
         - name: Deploy Bicep
-          run: az deployment group create --resource-group ${{ vars.APP_RG_NAME }} --template-file ./terraform/deploy.bicep --parameters appName=demoapp99${{ vars.APP_NAME }} --parameters location=${{ vars.APP_LOCATION }}
+          run: az deployment group create --resource-group ${{ vars.APP_RG_NAME }} --template-file ./deploy.bicep --parameters appName=demoapp99${{ vars.APP_NAME }} --parameters location=${{ vars.APP_LOCATION }}
           working-directory: ./terraform
 
 
